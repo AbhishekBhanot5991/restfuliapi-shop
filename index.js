@@ -22,7 +22,11 @@ app.use('/api/products', productsRouter);
 // mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect(process.env.MONGODB_URI);
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+// db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+  process.exit(1); // Exit the application with an error code
+});
 db.once('open', () => {
   console.log('Connected to MongoDB');
 });
