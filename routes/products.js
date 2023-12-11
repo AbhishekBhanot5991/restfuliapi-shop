@@ -1,14 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/product');
-
+app.use('/uploads', express.static('uploads')); // Serve images from the 'uploads' folder
 // Get all products
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find();
-    res.json(products);
+
+    // Map the products to include image URLs
+    const productsWithImages = products.map(product => ({
+      _id: product._id,
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      imageUrl: product.imageUrl ? `https://charming-leotard-pig.cyclic.app/${product.imageUrl}` : null,
+    }));
+
+    res.json(productsWithImages);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Error Fetching Products' ,error:error.message });
   }
 });
 
@@ -28,23 +38,43 @@ router.get('/', async (req, res) => {
 //   }
 // });
 
-router.post('/', async (req, res) => {
-  const product = new Product({
-    name: req.body.name,
-    price: req.body.price,
-    description: req.body.description,
-  });
+// router.post('/', async (req, res) => {
+//   const product = new Product({
+//     name: req.body.name,
+//     price: req.body.price,
+//     description: req.body.description,
+//   });
 
+//   try {
+//     const newProduct = await product.save();
+//     res.status(201).json(newProduct);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(400).json({ message: 'Error creating product', error: error.message });
+//   }
+// });
+
+// Get a particular product by ID
+
+router.post('/', upload.single('image'), async (req, res) => {
   try {
-    const newProduct = await product.save();
-    res.status(201).json(newProduct);
+    const { name, price, description } = req.body;
+
+    const newProduct = new Product({
+      name,
+      price,
+      description,
+      imageUrl: req.file ? req.file.path : null, // Store the image path in the database
+    });
+
+    const savedProduct = await newProduct.save();
+    res.status(201).json(savedProduct);
   } catch (error) {
     console.error(error);
     res.status(400).json({ message: 'Error creating product', error: error.message });
   }
 });
 
-// Get a particular product by ID
 router.get('/:id', async (req, res) => {
   const productId = req.params.id;
 

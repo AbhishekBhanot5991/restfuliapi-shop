@@ -1,8 +1,10 @@
 const express = require('express');
+const multer = require('multer');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 
 dotenv.config();
 
@@ -30,6 +32,18 @@ db.on('error', (err) => {
 db.once('open', () => {
   console.log('Connected to MongoDB');
 });
+
+// Set up Multer for image uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Set the destination folder for uploads
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}${path.extname(file.originalname)}`); // Set a unique filename
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // Start the server
 app.listen(PORT, () => {
