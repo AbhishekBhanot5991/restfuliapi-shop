@@ -3,6 +3,7 @@ const router = express.Router();
 const Product = require('../models/product');
 const multer = require('multer');
 const path = require('path');
+
 // Set up Multer for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -78,7 +79,7 @@ router.post('/', upload.single('imageUrl'), async (req, res) => {
       name,
       price,
       description,
-      imageUrl: req.file ? path.join('uploads', req.file.filename).replace(/\\/g, '/') : null,
+      imageUrl: req.file ? path.join('uploads', req.file.filename) : null,
     });
 
     const savedProduct = await newProduct.save();
