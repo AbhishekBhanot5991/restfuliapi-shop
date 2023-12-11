@@ -1,7 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/product');
-app.use('/uploads', express.static('uploads')); // Serve images from the 'uploads' folder
+const multer = require('multer');
+const path = require('path');
+// Set up Multer for image uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Set the destination folder for uploads
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}${path.extname(file.originalname)}`); // Set a unique filename
+  },
+});
+
+const upload = multer({ storage: storage });
+
+router.use('/uploads', express.static('uploads')); // Serve images from the 'uploads' folder
 // Get all products
 router.get('/', async (req, res) => {
   try {
@@ -56,7 +70,7 @@ router.get('/', async (req, res) => {
 
 // Get a particular product by ID
 
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/', upload.single('imageUrl'), async (req, res) => {
   try {
     const { name, price, description } = req.body;
 
