@@ -61,4 +61,73 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: 'Error fetching product', error: error.message });
   }
 });
+
+// Update a product by ID (PUT)
+router.put('/:id', async (req, res) => {
+  const productId = req.params.id;
+
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      {
+        name: req.body.name,
+        price: req.body.price,
+        description: req.body.description,
+      },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error updating product', error: error.message });
+  }
+});
+
+// Partially update a product by ID (PATCH)
+router.patch('/:id', async (req, res) => {
+  const productId = req.params.id;
+
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { $set: req.body },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error updating product', error: error.message });
+  }
+});
+
+// Delete a product by ID (DELETE)
+router.delete('/:id', async (req, res) => {
+  const productId = req.params.id;
+
+  try {
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+
+    if (!deletedProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deleting product', error: error.message });
+  }
+});
+
+
+
 module.exports = router;
