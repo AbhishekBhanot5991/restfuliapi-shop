@@ -15,29 +15,6 @@ router.post(
     res.json({ message: 'This route is protected!' });
   }
 );
-
-
-// Signup route
-router.post('/signup', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const hashedPassword = User.generateHash(password);
-
-    const newUser = new User({ email, password: hashedPassword });
-    await newUser.save();
-
-    res.json({ message: 'Signup successful' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error signing up', error: error.message });
-  }
-});
-
-// Login route
-router.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
-  const token = jwt.sign({ sub: req.user._id }, process.env.JWT_SECRET);
-  res.json({ token });
-});
-
 // Set up Multer for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
