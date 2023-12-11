@@ -1,8 +1,42 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/product');
+const User = require('../models/user'); // Import the User model
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
 const multer = require('multer');
 const path = require('path');
+
+// Example route with authentication
+router.post(
+  '/protected',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    res.json({ message: 'This route is protected!' });
+  }
+);
+
+
+// Signup route
+router.post('/signup', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const hashedPassword = User.generateHash(password);
+
+    const newUser = new User({ email, password: hashedPassword });
+    await newUser.save();
+
+    res.json({ message: 'Signup successful' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error signing up', error: error.message });
+  }
+});
+
+// Login route
+router.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
+  const token = jwt.sign({ sub: req.user._id }, process.env.JWT_SECRET);
+  res.json({ token });
+});
 
 // Set up Multer for image uploads
 const storage = multer.diskStorage({
@@ -37,40 +71,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Create a new product
-// router.post('/', async (req, res) => {
-//   const product = new Product({
-//     name: req.body.name,
-//     price: req.body.price,
-//     description: req.body.description,
-//   });
-
-//   try {
-//     const newProduct = await product.save();
-//     res.status(201).json(newProduct);
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// });
-
-// router.post('/', async (req, res) => {
-//   const product = new Product({
-//     name: req.body.name,
-//     price: req.body.price,
-//     description: req.body.description,
-//   });
-
-//   try {
-//     const newProduct = await product.save();
-//     res.status(201).json(newProduct);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(400).json({ message: 'Error creating product', error: error.message });
-//   }
-// });
-
-// Get a particular product by ID
-
 router.post('/', upload.single('imageUrl'), async (req, res) => {
   try {
     const { name, price, description } = req.body;
@@ -90,6 +90,7 @@ router.post('/', upload.single('imageUrl'), async (req, res) => {
   }
 });
 
+// Get a particular product by ID
 router.get('/:id', async (req, res) => {
   const productId = req.params.id;
 
@@ -172,7 +173,5 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ message: 'Error deleting product', error: error.message });
   }
 });
-
-
 
 module.exports = router;
