@@ -43,7 +43,12 @@ const storage = multer.diskStorage({
   },
 });
 
+// const upload = multer({ storage: storage });
+
 const upload = multer({ storage: storage });
+
+// Serve images from the 'uploads' folder
+app.use('/uploads', express.static('uploads'));
 
 // Start the server
 app.listen(PORT, () => {
