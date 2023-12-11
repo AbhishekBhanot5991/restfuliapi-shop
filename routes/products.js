@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
       name: product.name,
       price: product.price,
       description: product.description,
-      imageUrl: product.imageUrl ? `https://charming-leotard-pig.cyclic.app/uploads/${product.imageUrl}` : null,
+      imageUrl: product.imageUrl ? `https://charming-leotard-pig.cyclic.app/${product.imageUrl}` : null,
     }));
 
     res.json(productsWithImages);
