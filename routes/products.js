@@ -78,7 +78,7 @@ router.post('/', upload.single('imageUrl'), async (req, res) => {
       name,
       price,
       description,
-      imageUrl: req.file ? req.file.path : null, // Store the image path in the database
+      imageUrl: req.file ? path.join('uploads', req.file.filename).replace(/\\/g, '/') : null,
     });
 
     const savedProduct = await newProduct.save();
