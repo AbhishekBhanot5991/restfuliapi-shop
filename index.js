@@ -6,8 +6,6 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 
-
-
 const passport = require('passport');
 require('./config/passport-config'); // Path to your passport-config.js file
 
