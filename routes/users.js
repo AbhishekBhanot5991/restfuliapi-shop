@@ -22,7 +22,7 @@ function authenticateToken(req, res, next) {
 // Signup route
 router.post('/signup', async (req, res) => {
     try {
-      // console.log('Signup route hit');
+      console.log('Signup route hit');
       const { email, password } = req.body;
       console.log('Email:', email);
   
@@ -34,10 +34,10 @@ router.post('/signup', async (req, res) => {
   
       res.json({ message: 'Signup successful' });
     } catch (error) {
-      // console.error('Error:', error);
+      console.error('Error:', error);
       res.status(500).json({ message: 'Error signing up', error: error.message });
     }
-  });
+});
 
 // Login route
 router.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
