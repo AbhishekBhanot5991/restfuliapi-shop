@@ -26,9 +26,6 @@ const usersRouter = require('./routes/users');
 app.use('/api/products', productsRouter);
 app.use('/api/users', usersRouter);
 
-
-
-
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI);
 const db = mongoose.connection;
