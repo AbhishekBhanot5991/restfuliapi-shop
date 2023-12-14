@@ -7,14 +7,6 @@ const passport = require('passport');
 const multer = require('multer');
 const path = require('path');
 
-// Example route with authentication
-// router.post(
-//   '/protected',
-//   passport.authenticate('jwt', { session: false }),
-//   (req, res) => {
-//     res.json({ message: 'This route is protected!' });
-//   }
-// );
 // Set up Multer for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -148,8 +140,17 @@ router.get('/:id', async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
+    // Format the imageUrl similar to how it's done in the list of products
+    const productWithImage = {
+      _id: product._id,
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      category: product.category,
+      imageUrl: product.imageUrl ? `https://charming-leotard-pig.cyclic.app/${product.imageUrl}` : null,
+    };
 
-    res.json(product);
+    res.json(productWithImage);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error fetching product', error: error.message });
