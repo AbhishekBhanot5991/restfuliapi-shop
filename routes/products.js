@@ -18,7 +18,7 @@ router.post(
 // Set up Multer for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, '/uploads/'); // Set the destination folder for uploads
+    cb(null, 'uploads/'); // Set the destination folder for uploads
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}${path.extname(file.originalname)}`); // Set a unique filename
@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
       name: product.name,
       price: product.price,
       description: product.description,
-      imageUrl: product.imageUrl ? `https://charming-leotard-pig.cyclic.app/${product.imageUrl}` : null,
+      imageUrl: product.imageUrl ? `https://charming-leotard-pig.cyclic.app/uploads/${product.imageUrl}` : null,
     }));
 
     res.json(productsWithImages);
