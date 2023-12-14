@@ -18,7 +18,7 @@ router.post(
 // Set up Multer for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, 'uploads/')); // Set the destination folder for uploads
+    cb(null, 'uploads/'); // Set the destination folder for uploads
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}${path.extname(file.originalname)}`); // Set a unique filename
@@ -32,18 +32,14 @@ router.use('/uploads', express.static('uploads')); // Serve images from the 'upl
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find();
-    
-    if (products.length === 0) {
-      return res.json({ message: 'No products found' });
-    }
+
     // Map the products to include image URLs
     const productsWithImages = products.map(product => ({
       _id: product._id,
       name: product.name,
-      category:product.category,
       price: product.price,
       description: product.description,
-      imageUrl: product.imageUrl ? `https://charming-leotard-pig.cyclic.app/uploads/${product.imageUrl}` : null,
+      imageUrl: product.imageUrl ? `https://charming-leotard-pig.cyclic.app/${product.imageUrl}` : null,
     }));
 
     res.json(productsWithImages);
@@ -54,13 +50,12 @@ router.get('/', async (req, res) => {
 
 router.post('/', upload.single('imageUrl'), async (req, res) => {
   try {
-    const { name, price, description,category } = req.body;
+    const { name, price, description } = req.body;
 
     const newProduct = new Product({
       name,
       price,
       description,
-      category,
       imageUrl: req.file ? path.join('uploads', req.file.filename).replace(/\\/g, '/') : null,
     });
 
@@ -91,7 +86,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a product by ID (PUT)
-router.put('/:id', async (req, res) => {
+router.put('/:id',  passport.authenticate('jwt', { session: false }), async (req, res) => {
   const productId = req.params.id;
 
   try {
@@ -100,7 +95,6 @@ router.put('/:id', async (req, res) => {
       {
         name: req.body.name,
         price: req.body.price,
-        category:req.body.category,
         description: req.body.description,
       },
       { new: true }
@@ -118,7 +112,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Partially update a product by ID (PATCH)
-router.patch('/:id',  async (req, res) => {
+router.patch('/:id',  passport.authenticate('jwt', { session: false }), async (req, res) => {
   const productId = req.params.id;
 
   try {
@@ -140,7 +134,7 @@ router.patch('/:id',  async (req, res) => {
 });
 
 // Delete a product by ID (DELETE)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const productId = req.params.id;
 
   try {
