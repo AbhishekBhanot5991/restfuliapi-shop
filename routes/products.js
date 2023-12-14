@@ -8,13 +8,13 @@ const multer = require('multer');
 const path = require('path');
 
 // Example route with authentication
-router.post(
-  '/protected',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    res.json({ message: 'This route is protected!' });
-  }
-);
+// router.post(
+//   '/protected',
+//   passport.authenticate('jwt', { session: false }),
+//   (req, res) => {
+//     res.json({ message: 'This route is protected!' });
+//   }
+// );
 // Set up Multer for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -140,7 +140,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Delete a product by ID (DELETE)
-router.delete('/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.delete('/:id', async (req, res) => {
   const productId = req.params.id;
 
   try {
