@@ -18,7 +18,7 @@ router.post(
 // Set up Multer for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Set the destination folder for uploads
+    cb(null, path.join(__dirname, 'uploads/')); // Set the destination folder for uploads
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}${path.extname(file.originalname)}`); // Set a unique filename
