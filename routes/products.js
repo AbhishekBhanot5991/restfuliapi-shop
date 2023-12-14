@@ -39,6 +39,7 @@ router.get('/', async (req, res) => {
       name: product.name,
       price: product.price,
       description: product.description,
+      category:product.category,
       imageUrl: product.imageUrl ? `https://charming-leotard-pig.cyclic.app/${product.imageUrl}` : null,
     }));
 
@@ -50,12 +51,13 @@ router.get('/', async (req, res) => {
 
 router.post('/', upload.single('imageUrl'), async (req, res) => {
   try {
-    const { name, price, description } = req.body;
+    const { name, price, description, category } = req.body;
 
     const newProduct = new Product({
       name,
       price,
       description,
+      category,
       imageUrl: req.file ? path.join('uploads', req.file.filename).replace(/\\/g, '/') : null,
     });
 
@@ -96,6 +98,7 @@ router.put('/:id',  passport.authenticate('jwt', { session: false }), async (req
         name: req.body.name,
         price: req.body.price,
         description: req.body.description,
+        category:req.body.category
       },
       { new: true }
     );
