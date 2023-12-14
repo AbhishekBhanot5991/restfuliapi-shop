@@ -89,7 +89,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a product by ID (PUT)
-router.put('/:id',  passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put('/:id',  async (req, res) => {
   const productId = req.params.id;
 
   try {
@@ -116,7 +116,7 @@ router.put('/:id',  passport.authenticate('jwt', { session: false }), async (req
 });
 
 // Partially update a product by ID (PATCH)
-router.patch('/:id',  passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.patch('/:id',   async (req, res) => {
   const productId = req.params.id;
 
   try {
