@@ -121,24 +121,6 @@ router.patch('/:id',   async (req, res) => {
   }
 });
 
-// Get a particular product by ID
-router.get('/:id', async (req, res) => {
-  const productId = req.params.id;
-
-  try {
-    const product = await Product.findById(productId);
-
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-
-    res.json(product);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error fetching product', error: error.message });
-  }
-});
-
 // Delete a product by ID (DELETE)
 router.delete('/:id', async (req, res) => {
   const productId = req.params.id;
@@ -154,6 +136,24 @@ router.delete('/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error deleting product', error: error.message });
+  }
+});
+
+// Get a particular product by ID
+router.get('/:id', async (req, res) => {
+  const productId = req.params.id;
+
+  try {
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching product', error: error.message });
   }
 });
 
