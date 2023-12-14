@@ -37,6 +37,7 @@ router.get('/', async (req, res) => {
     const productsWithImages = products.map(product => ({
       _id: product._id,
       name: product.name,
+      category:product.category,
       price: product.price,
       description: product.description,
       imageUrl: product.imageUrl ? `https://charming-leotard-pig.cyclic.app/${product.imageUrl}` : null,
@@ -56,6 +57,7 @@ router.post('/', upload.single('imageUrl'), async (req, res) => {
       name,
       price,
       description,
+      category,
       imageUrl: req.file ? path.join('uploads', req.file.filename).replace(/\\/g, '/') : null,
     });
 
@@ -95,6 +97,7 @@ router.put('/:id', async (req, res) => {
       {
         name: req.body.name,
         price: req.body.price,
+        category:req.body.category,
         description: req.body.description,
       },
       { new: true }
