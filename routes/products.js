@@ -18,7 +18,7 @@ router.post(
 // Set up Multer for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, '/tmp/'); // Set the destination folder for uploads
+    cb(null, '/uploads/'); // Set the destination folder for uploads
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}${path.extname(file.originalname)}`); // Set a unique filename
@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve images from the 'uploads' folder
+router.use('/uploads', express.static('uploads')); // Serve images from the 'uploads' folder
 // Get all products
 router.get('/', async (req, res) => {
   try {
