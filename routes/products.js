@@ -51,7 +51,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', upload.single('imageUrl'), async (req, res) => {
   try {
-    const { name, price, description } = req.body;
+    const { name, price, description,category } = req.body;
 
     const newProduct = new Product({
       name,
