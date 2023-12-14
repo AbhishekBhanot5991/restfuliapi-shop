@@ -89,7 +89,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a product by ID (PUT)
-router.put('/:id',  async (req, res) => {
+router.put('/:id', async (req, res) => {
   const productId = req.params.id;
 
   try {
@@ -99,7 +99,7 @@ router.put('/:id',  async (req, res) => {
         name: req.body.name,
         price: req.body.price,
         description: req.body.description,
-        category:req.body.category
+        category: req.body.category
       },
       { new: true }
     );
