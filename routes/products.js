@@ -32,7 +32,10 @@ router.use('/uploads', express.static('uploads')); // Serve images from the 'upl
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find();
-
+    
+    if (products.length === 0) {
+      return res.json({ message: 'No products found' });
+    }
     // Map the products to include image URLs
     const productsWithImages = products.map(product => ({
       _id: product._id,
