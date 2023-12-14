@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.use('/uploads', express.static('uploads')); // Serve images from the 'uploads' folder
+router.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve images from the 'uploads' folder
 // Get all products
 router.get('/', async (req, res) => {
   try {
