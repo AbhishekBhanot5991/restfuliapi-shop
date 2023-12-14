@@ -75,7 +75,6 @@ router.post('/', upload.single('imageUrl'), async (req, res) => {
 // Update a product by ID (PUT)
 router.put('/:id', async (req, res) => {
   const productId = req.params.id;
-
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
