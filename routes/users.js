@@ -25,27 +25,30 @@ router.get('/protected', authenticateToken, (req, res) => {
 
 // Signup route
 router.post('/signup', async (req, res) => {
-    try {
-      console.log('Signup route hit');
-      const { email, password, confirmPassword } = req.body;
-      console.log('Email:', email);
-      
-      // Check if password and confirmation password match
-      if (password !== confirmPassword) {
-        return res.status(400).json({ message: 'Password and confirmation password do not match.' });
-      }
-
-      const newUser = new User({ email, password });
-      newUser.password = await newUser.generateHash(password); // Call generateHash on the instance
-  
-      await newUser.save();
-      // console.log('User saved');
-  
-      res.json({ message: 'Signup successful' });
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ message: 'Error signing up', error: error.message });
+  try {
+    console.log('Signup route hit');
+    const { email, password, confirmPassword } = req.body;
+    console.log('Email:', email);
+    
+    // Check if password and confirmation password match
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: 'Password and confirmation password do not match.' });
     }
+
+    // Create a new user instance
+    const newUser = new User({ email });
+
+    // Generate hash for the password and set it in the user instance
+    newUser.password = await newUser.generateHash(password);
+
+    // Save the user
+    await newUser.save();
+
+    res.json({ message: 'Signup successful' });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Error signing up', error: error.message });
+  }
 });
 
 // Login route

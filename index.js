@@ -25,7 +25,7 @@ app.use(passport.initialize());
 const productsRouter = require('./routes/products');
 const usersRouter = require('./routes/users');
 app.use('/api/products', productsRouter);
-app.use('/users', usersRouter);
+app.use('/api/users', usersRouter);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI);
