@@ -20,7 +20,9 @@ router.post('/signup', async (req, res) => {
     }
 
     const newUser = new User({ name, email, password });
+    console.log('before generating hash');
     await newUser.generateHash(password);
+    console.log('After generating hash');
     await newUser.save();
 
     res.json({ message: 'Signup successful' });

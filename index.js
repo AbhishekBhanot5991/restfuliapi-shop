@@ -7,8 +7,9 @@ const dotenv = require('dotenv');
 const path = require('path');
 const authRoutes = require('./routes/auth');
 
-const passport = require('passport');
-require('./config/passport-config'); // Path to your passport-config.js file
+// const passport = require('passport');
+// require('./config/passport-config'); 
+// Path to your passport-config.js file
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ app.use(cors());
 // app.use(bodyParser.json());
 app.use(express.json());
 // app.use(bodyParser.json()); 
-app.use(passport.initialize());
+// app.use(passport.initialize());
 
 // Routes
 const productsRouter = require('./routes/products');
