@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 // Middleware to verify JWT token
 function authenticateToken(req, res, next) {
-  const token = req.header('Authorization');
+  const token = req.header('Authorization');po
   if (!token) return res.status(401).json({ message: 'Access denied. Token not provided.' });
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
@@ -18,14 +18,23 @@ function authenticateToken(req, res, next) {
   });
 }
 
+// Protected route that requires authentication
+router.get('/protected', authenticateToken, (req, res) => {
+  res.json({ message: 'This is a protected route.' });
+});
 
 // Signup route
 router.post('/signup', async (req, res) => {
     try {
       console.log('Signup route hit');
-      const { email, password } = req.body;
+      const { email, password, confirmPassword } = req.body;
       console.log('Email:', email);
-  
+      
+      // Check if password and confirmation password match
+      if (password !== confirmPassword) {
+        return res.status(400).json({ message: 'Password and confirmation password do not match.' });
+      }
+
       const newUser = new User({ email, password });
       newUser.password = await newUser.generateHash(password); // Call generateHash on the instance
   
