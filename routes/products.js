@@ -3,7 +3,7 @@ const router = express.Router();
 const Product = require('../models/product');
 const User = require('../models/user'); // Import the User model
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
+// const passport = require('passport');
 const multer = require('multer');
 const path = require('path');
 

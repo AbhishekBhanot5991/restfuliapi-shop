@@ -5,11 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
-const authRoutes = require('./routes/auth');
-
-// const passport = require('passport');
-// require('./config/passport-config'); 
-// Path to your passport-config.js file
+// const productsRouter = require('./routes/products');
 
 dotenv.config();
 
@@ -18,12 +14,11 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
-// app.use(bodyParser.json());
 app.use(express.json());
-// app.use(bodyParser.json()); 
-// app.use(passport.initialize());
+
 
 // Routes
+const authRoutes = require('./routes/auth');
 const productsRouter = require('./routes/products');
 // const usersRouter = require('./routes/users');
 app.use('/api/products', productsRouter);

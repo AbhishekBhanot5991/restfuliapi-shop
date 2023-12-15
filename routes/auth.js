@@ -3,7 +3,6 @@ const router = express.Router();
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
-// Signup route
 router.post('/signup', async (req, res) => {
   try {
     const { name, email, password, confirmPassword } = req.body;
@@ -20,9 +19,6 @@ router.post('/signup', async (req, res) => {
     }
 
     const newUser = new User({ name, email, password });
-    console.log('before generating hash');
-    await newUser.generateHash(password);
-    console.log('After generating hash');
     await newUser.save();
 
     res.json({ message: 'Signup successful' });
@@ -32,7 +28,6 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Login route
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
