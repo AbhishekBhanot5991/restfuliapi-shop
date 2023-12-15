@@ -8,9 +8,9 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.methods.generateHash = async function (password) {
-    return await bcrypt.hash(password, bcrypt.genSaltSync(8), null);
-  };
-
+  const saltRounds = 8; // You can adjust this number based on your security needs
+  return await bcrypt.hash(password, saltRounds);
+};
 userSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
