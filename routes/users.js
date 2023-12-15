@@ -29,7 +29,9 @@ router.post('/signup', async (req, res) => {
     console.log('Signup route hit');
     const { email, password, confirmPassword } = req.body;
     console.log('Email:', email);
-    
+    if (!email || !password || !confirmPassword) {
+      return res.status(400).json({ message: 'Missing required fields: email, password, and confirmation password.' });
+    }
     // Check if password and confirmation password match
     if (password !== confirmPassword) {
       return res.status(400).json({ message: 'Password and confirmation password do not match.' });
