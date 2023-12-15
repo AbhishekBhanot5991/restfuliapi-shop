@@ -11,35 +11,24 @@ function authenticateToken(req, res, next) {
   if (!token) return res.status(401).json({ message: 'Access denied. Token not provided.' });
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: 'Invalid token.' });
+      if (err) return res.status(403).json({ message: 'Invalid token.' });
 
-    req.user = user;
-    next();
+      req.user = user;
+      next();
   });
 }
 
-// Protected route that requires authentication
-router.get('/protected', authenticateToken, (req, res) => {
-  res.json({ message: 'This is a protected route.' });
-});
 
+// Signup route
 router.post('/signup', async (req, res) => {
   try {
     console.log('Signup route hit');
     const { email, password } = req.body;
     console.log('Email:', email);
 
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Missing required fields: email and password.' });
-    }
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const newUser = new User({ email, password: hashedPassword });
 
-    // Create a new user instance
-    const newUser = new User({ email });
-
-    // Generate hash for the password and set it in the user instance
-    await newUser.generateHash(password);
-
-    // Save the user
     await newUser.save();
 
     res.json({ message: 'Signup successful' });
@@ -52,12 +41,13 @@ router.post('/signup', async (req, res) => {
 // Login route
 router.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
   try {
-    const token = jwt.sign({ sub: req.user._id }, process.env.JWT_SECRET);
-    res.json({ token });
+      const token = jwt.sign({ sub: req.user._id }, process.env.JWT_SECRET);
+      res.json({ token });
   } catch (error) {
-    console.error('Error generating JWT token:', error);
-    res.status(500).json({ message: 'Error generating JWT token' });
+      console.error('Error generating JWT token:', error);
+      res.status(500).json({ message: 'Error generating JWT token' });
   }
 });
+  
 
 module.exports = router;
