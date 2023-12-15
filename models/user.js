@@ -8,15 +8,16 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateHash = async function (password) {
+  const saltRounds = 8;
+
   try {
-    const saltRounds = 8;
-    const hash = await bcrypt.hash(password, saltRounds);
-    return hash;
+    this.password = await bcrypt.hash(password, saltRounds);
   } catch (error) {
     console.error('Error hashing password:', error);
     throw new Error('Internal server error');
   }
 };
+
 
 userSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password);

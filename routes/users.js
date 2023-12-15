@@ -23,15 +23,16 @@ router.get('/protected', authenticateToken, (req, res) => {
   res.json({ message: 'This is a protected route.' });
 });
 
-// Signup route
 router.post('/signup', async (req, res) => {
   try {
     console.log('Signup route hit');
     const { email, password, confirmPassword } = req.body;
     console.log('Email:', email);
+
     if (!email || !password || !confirmPassword) {
       return res.status(400).json({ message: 'Missing required fields: email, password, and confirmation password.' });
     }
+
     // Check if password and confirmation password match
     if (password !== confirmPassword) {
       return res.status(400).json({ message: 'Password and confirmation password do not match.' });
@@ -41,7 +42,7 @@ router.post('/signup', async (req, res) => {
     const newUser = new User({ email });
 
     // Generate hash for the password and set it in the user instance
-    newUser.password = await newUser.generateHash(password);
+    await newUser.generateHash(password);
 
     // Save the user
     await newUser.save();
