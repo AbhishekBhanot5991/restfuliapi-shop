@@ -19,6 +19,11 @@ router.post('/signup', async (req, res) => {
       }
   
       const newUser = new User({ name, email, password });
+      
+      // Call the generateHash method to hash the password
+      await newUser.generateHash(password);
+  
+      // Save the user with the hashed password
       await newUser.save();
   
       res.json({ message: 'Signup successful' });

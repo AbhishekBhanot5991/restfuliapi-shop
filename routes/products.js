@@ -20,6 +20,24 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.use('/uploads', express.static('uploads')); // Serve images from the 'uploads' folder
+
+// Middleware to verify JWT
+const verifyToken = (req, res, next) => {
+  const token = req.header('Authorization');
+
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized: No token provided' });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+    req.userId = decoded.sub;
+    next();
+  });
+};
+
 // Get all products
 router.get('/', async (req, res) => {
   try {
@@ -32,7 +50,7 @@ router.get('/', async (req, res) => {
       price: product.price,
       description: product.description,
       category:product.category,
-      imageUrl: product.imageUrl ? `https://charming-leotard-pig.cyclic.app/${product.imageUrl}` : null,
+      imageUrl: product.imageUrl ? `http://localhost:3000/${product.imageUrl}` : null,
     }));
 
     res.json(productsWithImages);
@@ -41,7 +59,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', upload.single('imageUrl'), async (req, res) => {
+router.post('/',verifyToken, upload.single('imageUrl'), async (req, res) => {
   try {
     const { name, price, description, category } = req.body;
 
@@ -65,7 +83,7 @@ router.post('/', upload.single('imageUrl'), async (req, res) => {
 
 
 // Update a product by ID (PUT)
-router.put('/:id', async (req, res) => {
+router.put('/:id',verifyToken, async (req, res) => {
   const productId = req.params.id;
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -91,7 +109,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Partially update a product by ID (PATCH)
-router.patch('/:id',   async (req, res) => {
+router.patch('/:id', verifyToken, async (req, res) => {
   const productId = req.params.id;
 
   try {
@@ -113,7 +131,7 @@ router.patch('/:id',   async (req, res) => {
 });
 
 // Delete a product by ID (DELETE)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',verifyToken, async (req, res) => {
   const productId = req.params.id;
 
   try {
