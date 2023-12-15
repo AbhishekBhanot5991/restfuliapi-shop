@@ -7,7 +7,7 @@ passport.use(
     { usernameField: 'email' },
     async (username, password, done) => {
       try {
-        const user = await User.findOne({ email: username });
+        const user = await User.findOne({ email});
 
         if (!user || !user.validPassword(password)) {
           return done(null, false, { message: 'Incorrect email or password.' });

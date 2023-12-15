@@ -1,4 +1,3 @@
-// routes/users.js
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
@@ -23,17 +22,18 @@ function authenticateToken(req, res, next) {
 router.post('/signup', async (req, res) => {
   try {
     console.log('Signup route hit');
-    const { email, password } = req.body;
-    console.log('Email:', email);
-
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const newUser = new User({ email, password: hashedPassword });
-
-    await newUser.save();
-
-    res.json({ message: 'Signup successful' });
+      const { email, password } = req.body;
+      console.log('Email:', email);
+  
+      const newUser = new User({ email, password });
+      newUser.password = await newUser.generateHash(password); // Call generateHash on the instance
+  
+      await newUser.save();
+      // console.log('User saved');
+  
+      res.json({ message: 'Signup successful' });
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error signing up:', error.message);
     res.status(500).json({ message: 'Error signing up', error: error.message });
   }
 });
