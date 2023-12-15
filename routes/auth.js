@@ -4,30 +4,30 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
 router.post('/signup', async (req, res) => {
-  try {
-    const { name, email, password, confirmPassword } = req.body;
-
-    // Check if passwords match
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: 'Passwords do not match' });
+    try {
+      const { name, email, password, confirmPassword } = req.body;
+  
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        return res.status(400).json({ message: 'Passwords do not match' });
+      }
+  
+      // Check if user already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: 'User already exists' });
+      }
+  
+      const newUser = new User({ name, email, password });
+      await newUser.save();
+  
+      res.json({ message: 'Signup successful' });
+    } catch (error) {
+      console.error('Error signing up:', error.message);
+      res.status(500).json({ message: 'Error signing up', error: error.message });
     }
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
-
-    const newUser = new User({ name, email, password });
-    await newUser.save();
-
-    res.json({ message: 'Signup successful' });
-  } catch (error) {
-    console.error('Error signing up:', error.message);
-    res.status(500).json({ message: 'Error signing up', error: error.message });
-  }
-});
-
+  });
+  
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
