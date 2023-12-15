@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const authRoutes = require('./routes/auth');
 
 const passport = require('passport');
 require('./config/passport-config'); // Path to your passport-config.js file
@@ -23,9 +24,10 @@ app.use(passport.initialize());
 
 // Routes
 const productsRouter = require('./routes/products');
-const usersRouter = require('./routes/users');
+// const usersRouter = require('./routes/users');
 app.use('/api/products', productsRouter);
-app.use('/api/users', usersRouter);
+// app.use('/api/users', usersRouter);
+app.use('/api/auth', authRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI);
